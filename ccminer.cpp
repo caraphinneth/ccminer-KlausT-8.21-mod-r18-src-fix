@@ -118,6 +118,7 @@ const char *algo_names[] =
 	"nist5",
 	"penta",
 	"quark",
+	"anime",
 	"qubit",
 	"sia",
 	"skein",
@@ -278,6 +279,7 @@ Options:\n\
 			nist5       NIST5 (TalkCoin)\n\
 			penta       Pentablake hash (5x Blake 512)\n\
 			quark       Quark\n\
+			anime       Anime\n\
 			qubit       Qubit\n\
 			sia         Siacoin (at pools compatible to siamining.com) \n\
 			skein       Skein SHA2 (Skeincoin)\n\
@@ -2146,6 +2148,7 @@ static void *miner_thread(void *userdata)
 				break;
 			case ALGO_QUBIT:
 			case ALGO_QUARK:
+			case ALGO_ANIME:
 				minmax = 3100000 * max64time;
 				break;
 			case ALGO_JACKPOT:
@@ -2286,6 +2289,11 @@ static void *miner_thread(void *userdata)
 			rc = scanhash_quark(thr_id, work.data, work.target,
 								max_nonce, &hashes_done);
 			break;
+
+        case ALGO_ANIME:
+            rc = scanhash_anime(thr_id, work.data, work.target,
+                                max_nonce, &hashes_done);
+            break;
 
 		case ALGO_QUBIT:
 			rc = scanhash_qubit(thr_id, work.data, work.target,
@@ -2476,7 +2484,8 @@ static void *miner_thread(void *userdata)
 			{
 				case ALGO_JACKPOT:
 				case ALGO_QUARK:
-					// to stay comparable to other ccminer forks or pools
+				case ALGO_ANIME:
+				// to stay comparable to other ccminer forks or pools
 					rate_factor = 0.5;
 					break;
 				default:
